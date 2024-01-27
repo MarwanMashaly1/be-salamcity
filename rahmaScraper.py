@@ -26,7 +26,7 @@ class RahmaSpider:
     def get_prayerTimes(self):
         prayerTimes = []
         prayerTimes.append(
-            ("Masjid Al Rahma", "1216 Hunt Club Rd, Ottawa, ON K1V 2P1", "(613) 523-9977"))
+            ("Masjid Ar-Rahma", "1216 Hunt Club Rd, Ottawa, ON K1V 2P1", "(613) 523-9977"))
         table = self.prayer_soup.find("table", {"class": "table table-sm"})
         if table is not None:
             for row in table.findAll("tr"):
