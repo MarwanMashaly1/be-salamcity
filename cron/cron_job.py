@@ -8,11 +8,13 @@ from scrapers.snmcScraper import SnmcSpider
 from scrapers.kmaScraper import KmaSpider
 from scrapers.jamiOmarScraper import JamiOmarSpider
 from datetime import datetime
+import utils.rateLimiter as RateLimiter
 import time
 import logging
 
 # create a database object
 db = Database(DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME)
+rate_limiter = RateLimiter(rate=1, burst=1)
 
 # create a webscraper object`
 rahma = RahmaSpider()
@@ -23,33 +25,18 @@ insta = InstagramScraper()
 
 # get the events and prayer times from the webscrapers
 rahmaEvents = rahma.get_events()
-
 rahmaPrayerTimes = rahma.get_prayerTimes()
-
 snmcEvents = snmc.get_events()
-
 snmcPrayerTimes = snmc.get_prayerTimes()
-
 kmaEvents = kma.get_events()
-
 kmaPrayerTimes = kma.get_prayerTimes()
-
 jamiOmarEvents = jamiOmar.get_events()
 
 # jamiOmarPrayerTimes = jamiOmar.get_prayerTimes()
-# jamiOmarPrayerCallTime = datetime.now()
-
 # uomsaEvents =  insta.get_latest_posts("uomsa.aemuo")
-# uomsaEventCallTime = datetime.now()
-
 # cumsaEvents = insta.get_latest_posts("carletonmsa")
-# cumsaEventCallTime = datetime.now()
-
 # ottawaMosqueEvents = insta.get_latest_posts("theottawamosque")
-# ottawaMosqueEventCallTime = datetime.now()
-
 # bicEvents = insta.get_latest_posts("barrhavenislamiccentre")
-# bicEventCallTime = datetime.now()
 
 # add the events and prayer times to the database
 for event in rahmaEvents:
