@@ -40,52 +40,52 @@ jamiOmarEvents = jamiOmar.get_events()
 
 # add the events and prayer times to the database
 for event in rahmaEvents:
-    db.add_event(event)
-    time.sleep(1)
+    with rate_limiter:
+        db.add_event(event)
 
 for event in snmcEvents:
-    db.add_event(event)
-    time.sleep(1)
+    with rate_limiter:
+        db.add_event(event)
 
 for event in kmaEvents:
-    db.add_event(event)
-    time.sleep(1)
+    with rate_limiter:
+        db.add_event(event)
 
 for event in jamiOmarEvents:
-    db.add_event(event)
-    time.sleep(1)
+    with rate_limiter:
+        db.add_event(event)
 
+for prayer_time in rahmaPrayerTimes:
+    with rate_limiter:
+        db.add_prayer_time(prayer_time)
+
+for prayer_time in snmcPrayerTimes:
+    with rate_limiter:
+        db.add_prayer_time(prayer_time)
+
+for prayer_time in kmaPrayerTimes:
+    with rate_limiter:
+        db.add_prayer_time(prayer_time)
+
+# for prayer_time in jamiOmarPrayerTimes:
+#     with rate_limiter:
+#         db.add_prayer_time(prayer_time)
+        
 # for event in uomsaEvents:
-#     db.add_event(event)
-#     time.sleep(1)
-#
+#     with rate_limiter:
+#         db.add_event(event)
+        
 # for event in cumsaEvents:
-#     db.add_event(event)
-#     time.sleep(1)
-#
+#     with rate_limiter:
+#         db.add_event(event)
+        
 # for event in ottawaMosqueEvents:
-#     db.add_event(event)
-#     time.sleep(1)
-#
+#     with rate_limiter:
+#         db.add_event(event)
+        
 # for event in bicEvents:
-#     db.add_event(event)
-#     time.sleep(1)
-
-for prayer in rahmaPrayerTimes:
-    db.add_prayer_time(prayer)
-    time.sleep(1)
-
-for prayer in snmcPrayerTimes:
-    db.add_prayer_time(prayer)
-    time.sleep(1)
-
-for prayer in kmaPrayerTimes:
-    db.add_prayer_time(prayer)
-    time.sleep(1)
-
-# for prayer in jamiOmarPrayerTimes:
-#     db.add_prayer_time(prayer)
-#     time.sleep(1)
-    
-# print("rahma events: ", rahmaEvents)
-# print("snmc events: ", snmcEvents)
+#     with rate_limiter:
+#         db.add_event(event)
+        
+# close the database connection
+db.close_connection()

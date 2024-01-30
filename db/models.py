@@ -12,6 +12,7 @@ class Organization(Base):
     location = Column(String)
     phone_number = Column(String)
     email = Column(String)
+    description = Column(String)
     website = Column(String)
     facebook = Column(String)
     twitter = Column(String)
@@ -57,18 +58,18 @@ class Database:
         Base.metadata.create_all(self.engine)
         self.Session = sessionmaker(bind=self.engine)
 
-    def add_organization(self, name, location):
+    def add_organization(self, name, location, phone_number=None, email=None, description=None, website=None, facebook=None, twitter=None, instagram=None, youtube=None):
         session = self.Session()
 
         existing_organization = session.query(Organization).filter(Organization.name == name).first()
 
         if not existing_organization:
-            new_organization = Organization(name=name, location=location)
+            new_organization = Organization(name=name, location=location, phone_number=phone_number, email=email, description=description, website=website, facebook=facebook, twitter=twitter, instagram=instagram, youtube=youtube)
             session.add(new_organization)
             session.commit()
         session.close()
 
-    def add_event(self, title, date, start_time, end_time, location, link, image,
+    def add_event(self, title, date, image, link, start_time=None, end_time=None, location=None, 
                   short_description=None, full_description=None, category=None, organization_id=None):
         session = self.Session()
 
