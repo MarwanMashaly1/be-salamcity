@@ -5,11 +5,11 @@ import json
 from datetime import datetime
 # from imageOcr import filterText
 
-from rahmaScraper import RahmaSpider
-from snmcScraper import SnmcSpider
-from kmaScraper import KmaSpider
-from scrape_instagram import InstagramScraper
-from jamiOmarScraper import JamiOmarSpider
+from scrapers.rahmaScraper import RahmaSpider
+from scrapers.snmcScraper import SnmcSpider
+from scrapers.kmaScraper import KmaSpider
+from scrapers.scrape_instagram import InstagramScraper
+from scrapers.jamiOmarScraper import JamiOmarSpider
 
 app = Flask(__name__, static_folder='../client/build', template_folder="../client/build")
 # app = Flask(__name__, static_folder="./build/static", template_folder="./build")
