@@ -1,5 +1,5 @@
 DB_USERNAME = 'Marwan'
 DB_PASSWORD = ''
-DB_HOST = '127.0.0.1'
+DB_HOST = 'localhost'
 DB_PORT = '3306'
-DB_NAME = 'SalamCity'
+DB_NAME = 'salamcity'

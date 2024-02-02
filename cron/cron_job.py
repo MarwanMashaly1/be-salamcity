@@ -1,6 +1,6 @@
 # call all the webscrapers and update the database with the new information however if the information is already in the database then do not add it again
 # import models from the db folder
-from db.models import Database
+from db.models import Database, Event, PrayerTime
 from db.config import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME
 from scrapers.scrape_instagram import InstagramScraper
 from scrapers.rahmaScraper import RahmaSpider
@@ -9,7 +9,6 @@ from scrapers.kmaScraper import KmaSpider
 from scrapers.jamiOmarScraper import JamiOmarSpider
 from datetime import datetime
 import utils.rateLimiter as RateLimiter
-import time
 import logging
 
 # create a database object
@@ -41,7 +40,16 @@ jamiOmarEvents = jamiOmar.get_events()
 # add the events and prayer times to the database
 for event in rahmaEvents:
     with rate_limiter:
-        db.add_event(event)
+        new_event = Event(
+            name=event[0],
+            link=event[1],
+            image=event[2],
+            full_description=event[3],
+            created_at=datetime.now(),
+            organization_id=0
+    )
+
+    db.add(new_event)
 
 for event in snmcEvents:
     with rate_limiter:

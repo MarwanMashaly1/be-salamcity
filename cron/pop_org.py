@@ -1,29 +1,28 @@
 # This is a script to populate the org table with the data from the orgs.csv in the data folder file using the ORM
-
-import csv
 import os
-import sys
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from db.models import Base, Organization
+import csv
+from ..db.config import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME
+from ..db.models import Organization, Database
 import logging
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+csv_path = os.path.join(script_dir, 'org.csv')
+
 # create a database connection
-engine = create_engine(os.environ['DATABASE_URL'])
-Base.metadata.bind = engine
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
+db = Database(DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME)
 
 # open the csv file
-with open('data/orgs.csv', newline='') as csvfile:
-    reader = csv.DictReader(csvfile)
+with open(csv_path, newline='') as csvfile:
+    reader = csv.DictReader(csvfile, delimiter=';')
     for row in reader:
         # create an organization object
         org = Organization(
+            id=row['id'],
             name=row['name'],
             location=row['location'],
             phone_number=row['phone_number'],
             email=row['email'],
+            description=row['description'],  # Add this line
             website=row['website'],
             facebook=row['facebook'],
             twitter=row['twitter'],
@@ -31,10 +30,20 @@ with open('data/orgs.csv', newline='') as csvfile:
             youtube=row['youtube']
         )
         # add the organization object to the database
-        session.add(org)
-        session.commit()
+        db.add_organization(
+            id=org.id,
+            name=org.name,
+            location=org.location,
+            phone_number=org.phone_number,
+            email=org.email,
+            description=org.description,
+            website=org.website,
+            facebook=org.facebook,
+            twitter=org.twitter,
+            instagram=org.instagram,
+            youtube=org.youtube
+            )
         logging.info(f'Added {org.name} to the database')
     logging.info('All organizations added to the database')
-    session.close()
     logging.info('Database connection closed')
 

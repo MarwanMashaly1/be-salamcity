@@ -1,4 +1,5 @@
-from sqlalchemy import create_engine, Column, String, Integer, DateTime, ForeignKey, text
+from sqlalchemy import create_engine, Column, String, Integer, DateTime, ForeignKey, text, Text
+from sqlalchemy.dialects.mysql import MEDIUMTEXT as MEDIUMTEXT, LONGTEXT as LongText
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
@@ -8,32 +9,32 @@ Base = declarative_base()
 class Organization(Base):
     __tablename__ = 'organizations'
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-    location = Column(String)
-    phone_number = Column(String)
-    email = Column(String)
-    description = Column(String)
-    website = Column(String)
-    facebook = Column(String)
-    twitter = Column(String)
-    instagram = Column(String)
-    youtube = Column(String)
+    name = Column(String(250), nullable=False)
+    location = Column(String(500))
+    phone_number = Column(String(250))
+    email = Column(String(250))
+    description = Column(LongText)
+    website = Column(String(500))
+    facebook = Column(String(500))
+    twitter = Column(String(500))
+    instagram = Column(String(500))
+    youtube = Column(String(500))
     events = relationship('Event', back_populates='organization')
     prayer_times = relationship('PrayerTime', back_populates='organization')
 
 class Event(Base):
     __tablename__ = 'events'
     id = Column(Integer, primary_key=True)
-    title = Column(String, nullable=False)
-    date = Column(DateTime, nullable=False)
+    title = Column(String(500), nullable=False)
+    link = Column(String(500))
+    image = Column(LongText)
+    date = Column(DateTime)
     start_time = Column(DateTime)
     end_time = Column(DateTime)
-    location = Column(String)
-    link = Column(String)
-    image = Column(String)
-    short_description = Column(String)
-    full_description = Column(String)
-    category = Column(String)
+    location = Column(String(500))
+    short_description = Column(String(500))
+    full_description = Column(Text)
+    category = Column(String(250))
     created_at = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     organization_id = Column(Integer, ForeignKey('organizations.id'))
     organization = relationship('Organization', back_populates='events')
@@ -41,7 +42,7 @@ class Event(Base):
 class PrayerTime(Base):
     __tablename__ = 'prayer_times'
     id = Column(Integer, primary_key=True)
-    prayer_name = Column(String, nullable=False)
+    prayer_name = Column(String(50), nullable=False)
     athan_time = Column(DateTime, nullable=False)
     iqama_time = Column(DateTime)
     jumuah_time = Column(DateTime)
@@ -58,7 +59,7 @@ class Database:
         Base.metadata.create_all(self.engine)
         self.Session = sessionmaker(bind=self.engine)
 
-    def add_organization(self, name, location, phone_number=None, email=None, description=None, website=None, facebook=None, twitter=None, instagram=None, youtube=None):
+    def add_organization(self, id, name, location=None, phone_number=None, email=None, description=None, website=None, facebook=None, twitter=None, instagram=None, youtube=None):
         session = self.Session()
 
         existing_organization = session.query(Organization).filter(Organization.name == name).first()

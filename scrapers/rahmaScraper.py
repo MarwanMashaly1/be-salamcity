@@ -19,8 +19,27 @@ class RahmaSpider:
             if row.find('td') is not None:
                 event_name = row.find('td').text
                 event_link = row.find('a')['href']
-                event_description = self.get_eventInfo(event_link)
-                events.append((event_name, event_link, event_description, "Rahma"))
+                event_info = self.get_eventInfo(event_link)
+                if "image" in event_info:
+                    event_image = event_info["image"]
+                else:
+                    event_image = None
+                if "description" in event_info:
+                    event_description = event_info["description"]
+                else:
+                    event_description = None
+                    
+                # if len(event_info) > 0:
+                #     event_description = event_info[0]
+                # else:
+                #     event_description = None
+                # if len(event_info) > 1:
+                #     event_image = event_info[1]
+                # else:
+                #     event_image = None
+                # append to events based on how it should look like in the orm
+                events.append((event_name, event_link, event_image, event_description))
+                # events.append((event_name, event_link, event_description, "Rahma"))
         return events
 
     def get_prayerTimes(self):
@@ -44,12 +63,13 @@ class RahmaSpider:
         return prayerTimes
 
     def get_eventInfo(self, event_link):
-        eventInfo = []
+        eventInfo = {}
         event_page = urlopen(event_link).read()
         event_soup = BeautifulSoup(event_page, 'html.parser')
         event_description = event_soup.find(class_='content event_details')
         if event_description is not None:
-            eventInfo.append(event_description.text)
+            eventInfo["description"] = event_description.text
+            # eventInfo.append(event_description.text)
             # for description in event_description.find_all('p'):
             #     eventInfo.append(description.text)
             # for description in event_description.find_all('li'):
@@ -57,6 +77,7 @@ class RahmaSpider:
 
         if event_soup.find(class_='content event_poster') is not None:
             event_image = event_soup.find(class_='content event_poster')
-            eventInfo.append("https://events.mymasjid.ca" +
-                             event_image.find('img')['src'])
+            eventInfo["image"] = "https://events.mymasjid.ca" + event_image.find('img')['src']
+            # eventInfo.append("https://events.mymasjid.ca" +
+            #                  event_image.find('img')['src'])
         return eventInfo
