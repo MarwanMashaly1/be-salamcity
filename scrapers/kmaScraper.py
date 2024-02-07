@@ -14,7 +14,7 @@ class KmaSpider:
 
     def get_events(self):
         events = []
-        single_event = []
+        single_event = {}
         # Find events under the specified article tag
         article_events = self.events_soup.find_all('article', class_='mec-event-article')
 
@@ -32,21 +32,33 @@ class KmaSpider:
                 event_description_full =  self.get_eventInfo(event_link['href'])
 
             if title is not None:
-                single_event.append(title.text)
+                single_event["title"] = title.text
             if event_date is not None:
-                single_event.append(event_date.text)
+                single_event["date"] = event_date.text
             if event_time_start is not None:
-                single_event.append(event_time_start.text)
+                single_event["start_time"] = event_time_start.text
             if event_time_end is not None:
-                single_event.append(event_time_end.text)
+                single_event["end_time"] = event_time_end.text
             if event_location is not None:
-                single_event.append(event_location.text)
+                single_event["locaiton"] = event_location.text
             if event_description_short is not None:
-                single_event.append(event_description_short.text)
+                single_event["short_description"] = event_description_short.text
             if event_link is not None:
-                single_event.append(event_link['href'])
+                single_event["link"] = event_link['href']
             if event_description_full is not None:
-                single_event.append(event_description_full)
+                single_event["full_description"] = event_description_full
+            # if event_time_start is not None:
+            #     single_event.append(event_time_start.text)
+            # if event_time_end is not None:
+            #     single_event.append(event_time_end.text)
+            # if event_location is not None:
+            #     single_event.append(event_location.text)
+            # if event_description_short is not None:
+            #     single_event.append(event_description_short.text)
+            # if event_link is not None:
+            #     single_event.append(event_link['href'])
+            # if event_description_full is not None:
+            #     single_event.append(event_description_full)
             events.append(single_event)
             single_event = []
         
@@ -59,6 +71,7 @@ class KmaSpider:
     def get_eventInfo(self, event_link):
         #
         eventInfo = []
+        info = {}
         event_page = urlopen(event_link).read()
         event_soup = BeautifulSoup(event_page, 'html.parser')
         event_description = event_soup.find('div', class_='post-content')
@@ -72,9 +85,12 @@ class KmaSpider:
             eventInfo.append(content_text)
             eventInfo.append(iframe_list)
             eventInfo.append(link_list)
+            info["description"] = content_text
+            
         event_image = event_soup.find('div', class_='mec-events-event-image')
         if event_image is not None:
             eventInfo.append("https://kanatamuslims.ca/" + event_image.find('img')['data-lazy-src'])
+            info["image"] = "https://kanatamuslims.ca/" + event_image.find('img')['data-lazy-src']
         return eventInfo
     
     def get_prayerTimes(self):

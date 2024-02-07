@@ -70,17 +70,18 @@ class Database:
             session.commit()
         session.close()
 
-    def add_event(self, title, date, image, link, start_time=None, end_time=None, location=None, 
-                  short_description=None, full_description=None, category=None, organization_id=None):
+    def add_event(self, title=None, date=None, image=None, link=None, start_time=None, end_time=None, location=None, 
+                  short_description=None, full_description=None, category=None, organization_id=None, sub_links=None, other_info=None, created_at=None):
         session = self.Session()
 
-        existing_event = session.query(Event).filter(Event.title == title, Event.organization_id == organization_id).first()
-
+        # Check if the event already exists in the database by checking the title and organization_id however if title is null or empty then check by image and organization_id
+        existing_event = session.query(Event).filter( (Event.title == title and Event.organization_id == organization_id) and (Event.image == image and Event.organization_id == organization_id) ).first()
+        
         if not existing_event:
             new_event = Event(title=title, date=date, start_time=start_time, end_time=end_time,
                             location=location, link=link, image=image,
                             short_description=short_description, full_description=full_description,
-                            category=category, organization_id=organization_id)
+                            category=category, organization_id=organization_id, created_at=created_at, sub_links=sub_links, other_info=other_info)
             session.add(new_event)
             session.commit()
         session.close()

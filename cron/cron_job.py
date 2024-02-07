@@ -46,14 +46,14 @@ for event in rahmaEvents:
             image=event[2],
             full_description=event[3],
             created_at=datetime.now(),
-            organization_id=0
+            organization_id=3
     )
 
-    db.add(new_event)
+    db.add(new_event.name, new_event.link, new_event.image, new_event.full_description, new_event.created_at, new_event.organization_id)
 
 for event in snmcEvents:
     with rate_limiter:
-        db.add_event(event)
+        db.add_event(full_description=event["description"], image=event["image"], link=event["link"], organization_id=5, created_at=datetime.now())
 
 for event in kmaEvents:
     with rate_limiter:

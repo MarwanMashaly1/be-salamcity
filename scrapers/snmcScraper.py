@@ -15,11 +15,16 @@ class SnmcSpider:
         self.prayer_soup = BeautifulSoup(self.prayer_page, 'html.parser')
 
     def get_events(self):
+        event_info = {}
         events_t = []
         events = self.events_soup.find_all('div', {'class': 'sbi_item'})
         for event in events:
-            events_t.append([event.find('img')['alt'],
-                            event.find('a')['data-full-res'], "snmc"])
+            event_info["description"] = event.find('img')['alt']
+            event_info["image"] = event.find('a')['data-full-res']
+            event_info["link"] = "snmc.ca"
+            events_t.append(event_info)
+            # events_t.append([event.find('img')['alt'],
+            #                 event.find('a')['data-full-res'], "snmc"])
         return events_t
 
     def get_prayerTimes(self):
