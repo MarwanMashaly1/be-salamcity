@@ -73,8 +73,18 @@ class KmaSpider:
             eventInfo.append(iframe_list)
             eventInfo.append(link_list)
         event_image = event_soup.find('div', class_='mec-events-event-image')
-        if event_image is not None:
-            eventInfo.append("https://kanatamuslims.ca/" + event_image.find('img')['data-lazy-src'])
+        try:
+
+            if event_image is not None :
+        # Check if thre is anything inside the event_image tag
+        # if event_image is not None
+                eventInfo.append("https://kanatamuslims.ca/" + event_image.find('img')['data-lazy-src'])
+        except:
+            try:
+                eventInfo.append("https://kanatamuslims.ca/" + event_image.find('img')['src'])
+            except:
+                eventInfo.append("https://kanatamuslims.ca/wp-content/uploads/2024/02/kma_logo-jpg.webp")
+
         return eventInfo
     
     def get_prayerTimes(self):
