@@ -82,13 +82,13 @@ def sitemap():
 def favicon():
     return send_from_directory(app.static_folder, "favicon.ico")
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve(path):
-    if path != "" and path != "favicon.ico":
-        return send_from_directory('../client/build', path)
-    else:
-        return send_from_directory('../client/build', 'index.html')
+# @app.route('/', defaults={'path': ''})
+# @app.route('/<path:path>')
+# def serve(path):
+#     if path != "" and path != "favicon.ico":
+#         return send_from_directory('../client/build', path)
+#     else:
+#         return send_from_directory('../client/build', 'index.html')
 
 @app.route('/api/v1/masjidrahma/events', methods=['GET'])
 def get_rahma_events():

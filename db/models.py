@@ -14,6 +14,7 @@ class Organization(Base):
     phone_number = Column(String(250))
     email = Column(String(250))
     description = Column(LongText)
+    image = Column(LongText)   
     website = Column(String(500))
     facebook = Column(String(500))
     twitter = Column(String(500))
@@ -25,15 +26,18 @@ class Organization(Base):
 class Event(Base):
     __tablename__ = 'events'
     id = Column(Integer, primary_key=True)
-    title = Column(String(500), nullable=False)
-    link = Column(String(500))
+    title = Column(String(500))
+    link = Column(Text)
+    sub_links = Column(Text)
     image = Column(LongText)
     date = Column(DateTime)
-    start_time = Column(DateTime)
-    end_time = Column(DateTime)
+    start_time = Column(String(50))
+    end_time = Column(String(50))
     location = Column(String(500))
-    short_description = Column(String(500))
-    full_description = Column(Text)
+    short_description = Column(Text)
+    full_description = Column(MEDIUMTEXT)
+    other_info = Column(MEDIUMTEXT)
+    cost = Column(String(100))
     category = Column(String(250))
     created_at = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     organization_id = Column(Integer, ForeignKey('organizations.id'))
@@ -43,9 +47,10 @@ class PrayerTime(Base):
     __tablename__ = 'prayer_times'
     id = Column(Integer, primary_key=True)
     prayer_name = Column(String(50), nullable=False)
-    athan_time = Column(DateTime, nullable=False)
-    iqama_time = Column(DateTime)
-    jumuah_time = Column(DateTime)
+    athan_time = Column(String(50), nullable=False)
+    iqama_time = Column(String(50))
+    jumuah_time = Column(String(50))
+    jumuah_time2 = Column(String(50))
     created_at = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     organization_id = Column(Integer, ForeignKey('organizations.id'))
     organization = relationship('Organization', back_populates='prayer_times')
@@ -59,34 +64,41 @@ class Database:
         Base.metadata.create_all(self.engine)
         self.Session = sessionmaker(bind=self.engine)
 
-    def add_organization(self, id, name, location=None, phone_number=None, email=None, description=None, website=None, facebook=None, twitter=None, instagram=None, youtube=None):
+    def close_connection(self):
+        self.engine.dispose()
+
+    def add_organization(self, id, name, location=None, phone_number=None, email=None, description=None, website=None, facebook=None, twitter=None, instagram=None, youtube=None, image=None):
         session = self.Session()
 
         existing_organization = session.query(Organization).filter(Organization.name == name).first()
 
         if not existing_organization:
-            new_organization = Organization(name=name, location=location, phone_number=phone_number, email=email, description=description, website=website, facebook=facebook, twitter=twitter, instagram=instagram, youtube=youtube)
+            new_organization = Organization(name=name, location=location, phone_number=phone_number, email=email, description=description, website=website, facebook=facebook, twitter=twitter, instagram=instagram, youtube=youtube, image=image)
             session.add(new_organization)
             session.commit()
         session.close()
 
     def add_event(self, title=None, date=None, image=None, link=None, start_time=None, end_time=None, location=None, 
-                  short_description=None, full_description=None, category=None, organization_id=None, sub_links=None, other_info=None, created_at=None):
+                  short_description=None, full_description=None, category=None, organization_id=None, sub_links=None, other_info=None, created_at=None, cost=None):
         session = self.Session()
 
+        # check if title is null or empty
+        if title is None or title == "":
+            existing_event = session.query(Event).filter(Event.image == image, Event.organization_id == organization_id).first()
+        else:
+            existing_event = session.query(Event).filter(Event.title == title, Event.organization_id == organization_id).first()
         # Check if the event already exists in the database by checking the title and organization_id however if title is null or empty then check by image and organization_id
-        existing_event = session.query(Event).filter( (Event.title == title and Event.organization_id == organization_id) and (Event.image == image and Event.organization_id == organization_id) ).first()
         
         if not existing_event:
             new_event = Event(title=title, date=date, start_time=start_time, end_time=end_time,
                             location=location, link=link, image=image,
                             short_description=short_description, full_description=full_description,
-                            category=category, organization_id=organization_id, created_at=created_at, sub_links=sub_links, other_info=other_info)
+                            category=category, organization_id=organization_id, created_at=created_at, sub_links=sub_links, other_info=other_info, cost=cost)
             session.add(new_event)
             session.commit()
         session.close()
 
-    def add_prayer_time(self, prayer_name, athan_time, iqama_time=None, jumuah_time=None, organization_id=None):
+    def add_prayer_time(self, prayer_name, athan_time, iqama_time=None, jumuah_time=None, jumuah_time2=None, organization_id=None):
         session = self.Session()
 
         existing_prayer_times = session.query(PrayerTime).filter(
@@ -99,6 +111,7 @@ class Database:
                 existing_prayer_time.athan_time = athan_time
                 existing_prayer_time.iqama_time = iqama_time
                 existing_prayer_time.jumuah_time = jumuah_time
+                existing_prayer_time.jumuah_time2 = jumuah_time2
                 session.commit()
                 break
 
@@ -106,7 +119,7 @@ class Database:
             # If the loop completes without a break, it means no existing entry has been updated,
             # so add a new prayer time
             new_prayer_time = PrayerTime(prayer_name=prayer_name, athan_time=athan_time,
-                                         iqama_time=iqama_time, jumuah_time=jumuah_time, organization_id=organization_id)
+                                         iqama_time=iqama_time, jumuah_time=jumuah_time, jumuah_time2=jumuah_time2, organization_id=organization_id)
             
             session.add(new_prayer_time)
             session.commit()

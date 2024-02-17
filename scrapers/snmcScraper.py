@@ -15,13 +15,13 @@ class SnmcSpider:
         self.prayer_soup = BeautifulSoup(self.prayer_page, 'html.parser')
 
     def get_events(self):
-        event_info = {}
         events_t = []
         events = self.events_soup.find_all('div', {'class': 'sbi_item'})
         for event in events:
+            event_info = {}
             event_info["description"] = event.find('img')['alt']
             event_info["image"] = event.find('a')['data-full-res']
-            event_info["link"] = "snmc.ca"
+            event_info["link"] = "https://snmc.ca"
             events_t.append(event_info)
             # events_t.append([event.find('img')['alt'],
             #                 event.find('a')['data-full-res'], "snmc"])
@@ -29,11 +29,9 @@ class SnmcSpider:
 
     def get_prayerTimes(self):
         prayer_times = []
+
         script_text = self.prayer_soup.find_all('script')[1]
         data = script_text.contents[0]
-
-        prayer_times.append(
-            ("SNMC", "3020 Woodroffe Ave, Nepean, ON K2J 4G3", "(613) 440-6300"))
 
         athan_times = json.loads(data.split('"times":')[
                                  1].split(',"shuruq"')[0])
@@ -53,20 +51,35 @@ class SnmcSpider:
             today_iqama = None
 
         for i in range(len(athan_times)):
+            prayer = {}
             if i == 0:
-                prayer_times.append(("Fajr", athan_times[i], today_iqama[i]))
+                prayer["prayer_name"] = "Fajr"
+                prayer["athan_time"] = athan_times[i]
+                prayer["iqama_time"] = today_iqama[i]
+                # prayer_times.append(("Fajr", athan_times[i], today_iqama[i]))
             elif i == 1:
-                prayer_times.append(("Zuhr", athan_times[i], today_iqama[i]))
+                prayer["prayer_name"] = "Dhuhr"
+                prayer["athan_time"] = athan_times[i]
+                prayer["iqama_time"] = today_iqama[i]
+                # prayer_times.append(("Zuhr", athan_times[i], today_iqama[i]))
             elif i == 2:
-                prayer_times.append(("Asr", athan_times[i], today_iqama[i]))
+                prayer["prayer_name"] = "Asr"
+                prayer["athan_time"] = athan_times[i]
+                prayer["iqama_time"] = today_iqama[i]
+                # prayer_times.append(("Asr", athan_times[i], today_iqama[i]))
             elif i == 3:
-                prayer_times.append(
-                    ("Maghrib", athan_times[i], today_iqama[i]))
+                prayer["prayer_name"] = "Maghrib"
+                prayer["athan_time"] = athan_times[i]
+                prayer["iqama_time"] = today_iqama[i]
+                # prayer_times.append(
+                #     ("Maghrib", athan_times[i], today_iqama[i]))
             elif i == 4:
-                prayer_times.append(("Isha", athan_times[i], today_iqama[i]))
+                prayer["prayer_name"] = "Isha"
+                prayer["athan_time"] = athan_times[i]
+                prayer["iqama_time"] = today_iqama[i]
+                # prayer_times.append(("Isha", athan_times[i], today_iqama[i]))
+            prayer_times.append(prayer)
 
-        prayer_times.append(
-            ("Jumuʿah", "12:00 PM", "-"))
-        prayer_times.append(
-            ("Jumuʿah 2", "1:15 PM", "-", ))
+        prayer_times.append({"prayer_name": "Jumuʿah 1", "athan_time": "12:15 PM", "iqama_time": "-"})
+        prayer_times.append({"prayer_name": "Jumuʿah 2", "athan_time": "1:30 PM", "iqama_time": "-"})
         return prayer_times

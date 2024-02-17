@@ -17,17 +17,22 @@ class RahmaSpider:
         rows = table.findAll(lambda tag: tag.name == 'tr')
         for row in rows:
             if row.find('td') is not None:
-                event_name = row.find('td').text
+                event = {}
+                # event_name = row.find('td').text
+                event["title"] = row.find('td').text
                 event_link = row.find('a')['href']
+                event["link"] = event_link
                 event_info = self.get_eventInfo(event_link)
                 if "image" in event_info:
-                    event_image = event_info["image"]
-                else:
-                    event_image = None
+                    event["image"] = event_info["image"]
+                # else:
+                #     event_image = None
                 if "description" in event_info:
-                    event_description = event_info["description"]
-                else:
-                    event_description = None
+                    event["description"] = event_info["description"]
+
+                events.append(event)
+                # else:
+                #     event_description = None
                     
                 # if len(event_info) > 0:
                 #     event_description = event_info[0]
@@ -38,28 +43,31 @@ class RahmaSpider:
                 # else:
                 #     event_image = None
                 # append to events based on how it should look like in the orm
-                events.append((event_name, event_link, event_image, event_description))
+                # events.append((event_name, event_link, event_image, event_description))
                 # events.append((event_name, event_link, event_description, "Rahma"))
         return events
 
     def get_prayerTimes(self):
         prayerTimes = []
-        prayerTimes.append(
-            ("Masjid Ar-Rahma", "1216 Hunt Club Rd, Ottawa, ON K1V 2P1", "(613) 523-9977"))
+        # prayerTimes.append(
+        #     ("Masjid Ar-Rahma", "1216 Hunt Club Rd, Ottawa, ON K1V 2P1", "(613) 523-9977"))
         table = self.prayer_soup.find("table", {"class": "table table-sm"})
         if table is not None:
             for row in table.findAll("tr"):
                 if row.find('td') is not None:
                     if row.find('td').text == "Salāh":
                         continue
+                    prayer = {}
                     prayer_eng = row.find('td').text
                     athan_time = row.find('td').find_next_sibling().text
                     iqama_time = row.find(
                         'td').find_next_sibling().find_next_sibling().text
                     # prayer_ar = row.find('td').find_next_sibling(
                     # ).find_next_sibling().find_next_sibling().text
-                    prayerTimes.append(
-                        (prayer_eng, athan_time, iqama_time))
+                    prayer["prayer_name"] = prayer_eng
+                    prayer["athan_time"] = athan_time
+                    prayer["iqama_time"] = iqama_time
+                    prayerTimes.append(prayer)
         return prayerTimes
 
     def get_eventInfo(self, event_link):

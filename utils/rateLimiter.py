@@ -1,11 +1,23 @@
 import asyncio
 
 class RateLimiter:
+
     def __init__(self, rate, burst):
         self.rate = rate  # Requests per second
         self.burst = burst  # Maximum burst size
         self.tokens = burst
         self.last_time = None
+
+    def __enter__(self):
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(self.wait())
+        self.tokens -= 1
+        if self.tokens < 0:
+            raise Exception("Rate limit exceeded")
+        
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass
+
 
     async def wait(self):
         if self.last_time is None:
