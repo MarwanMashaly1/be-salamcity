@@ -37,7 +37,7 @@ class InstagramScraper:
             count = 0
             latest_posts = []
             skip_count = 2 if username.lower() == "carletonmsa" else 0
-            total_posts = 2
+            total_posts = 3
 
             for post in posts:
                 if count < skip_count:
@@ -54,6 +54,7 @@ class InstagramScraper:
                     break
 
             posts = []
+            print("latest_posts: ", latest_posts)
 
             for post in latest_posts:
                 single_post = {}

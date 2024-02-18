@@ -34,7 +34,9 @@ jamiOmarEvents = jamiOmar.get_events()
 # jamiOmarPrayerTimes = jamiOmar.get_prayerTimes()
 
 uomsaEvents =  insta.get_latest_posts("uomsa.aemuo")
+print("reach here after uomsa")
 cumsaEvents = insta.get_latest_posts("carletonmsa")
+print("reach here after cumsa")
 ottawaMosqueEvents = insta.get_latest_posts("theottawamosque")
 bicEvents = insta.get_latest_posts("barrhavenislamiccentre")
 algonquinEvents = insta.get_latest_posts("algonquinmsa_")
@@ -101,7 +103,7 @@ for event in ottawaMosqueEvents:
 for event in bicEvents:
     with rate_limiter:
         db.add_event(full_description= event.get("description"), image= event.get("image"), link= event.get("link"), organization_id=8, created_at=datetime.now())
-        logging.info("Added bic event to database: " + event.get("description"))
+        logging.info("Added bic event to database: " + event.get("image"))
 
 for event in algonquinEvents:
     with rate_limiter:
@@ -109,3 +111,4 @@ for event in algonquinEvents:
         logging.info("Added algonquin event to database: " + event.get("description"))
 # close the database connection
 db.close_connection()
+logging.info("Database connection closed")
