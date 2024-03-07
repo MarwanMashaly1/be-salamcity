@@ -2,21 +2,25 @@ from flask import Flask, jsonify, send_from_directory, render_template
 from flask_cors import CORS
 from db.config import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME
 from db.models import Database
-from urllib import request
 from datetime import datetime
+import logging
 
 
-app = Flask(__name__, static_folder='../client/build', template_folder="../client/build")
+app = Flask(__name__, static_folder='../client/build/static', template_folder="../client/build")
+# app = Flask(__name__, static_folder="./build/static", template_folder="./build")
+
 CORS(app)
 application = app
 
+logging.basicConfig(filename='app.log', level=logging.INFO)
+logging.info('Started')
 db = Database(DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME)
+logging.info('Database connected')
 
-
-# @app.route('/', defaults={'path': ''})
-# @app.route('/<path:path>')
-# def index(path):
-#     return render_template('index.html')
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def index(path):
+    return render_template('index.html')
 
 # get all organizations from the database and save them to a global variable to be cached and update once a week
 organizations = db.get_all_organizations()
@@ -78,6 +82,13 @@ def get_organizations():
     if (datetime.now() - organizationsCallTime).total_seconds() > 604800:
         organizations = db.get_all_organizations()
         organizationsCallTime = datetime.now()
+    return jsonify(organizations)
+
+@app.route('/api/v1/organizations/<int:organization_id>/image')
+def get_organization_image(organization_id):
+    # get all organizations from the database
+    image = db.get_organization_image(organization_id)
+    return jsonify(image)
 
 # Flask error handling
 @app.errorhandler(500)
@@ -86,15 +97,11 @@ def internal_error(error):
     
 @app.errorhandler(404)
 def handle_404(e):
-    if request.path.startswith("/api/"):
-        return jsonify(message="Resource not found"), 404
     return send_from_directory(app.static_folder, "index.html")
 
 @app.errorhandler(405)
 def handle_405(e):
-    if request.path.startswith("/api/"):
-        return jsonify(message="Method not allowed"), 405
-    return e
+    return jsonify(message="Method not allowed"), 405
 
 @app.errorhandler(400)
 def bad_request_error(error):

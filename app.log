@@ -1,0 +1,389 @@
+INFO:root:Started
+INFO:root:Started
+INFO:sqlalchemy.engine.Engine:SELECT DATABASE()
+INFO:sqlalchemy.engine.Engine:[raw sql] {}
+INFO:sqlalchemy.engine.Engine:SELECT @@sql_mode
+INFO:sqlalchemy.engine.Engine:[raw sql] {}
+INFO:sqlalchemy.engine.Engine:SELECT @@lower_case_table_names
+INFO:sqlalchemy.engine.Engine:[raw sql] {}
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:DESCRIBE `salamcity`.`organizations`
+INFO:sqlalchemy.engine.Engine:[raw sql] {}
+INFO:sqlalchemy.engine.Engine:DESCRIBE `salamcity`.`events`
+INFO:sqlalchemy.engine.Engine:[raw sql] {}
+INFO:sqlalchemy.engine.Engine:DESCRIBE `salamcity`.`prayer_times`
+INFO:sqlalchemy.engine.Engine:[raw sql] {}
+INFO:sqlalchemy.engine.Engine:COMMIT
+INFO:root:Database connected
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations
+INFO:sqlalchemy.engine.Engine:[generated in 0.00057s] {}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT prayer_times.id AS prayer_times_id, prayer_times.prayer_name AS prayer_times_prayer_name, prayer_times.athan_time AS prayer_times_athan_time, prayer_times.iqama_time AS prayer_times_iqama_time, prayer_times.jumuah_time AS prayer_times_jumuah_time, prayer_times.jumuah_time2 AS prayer_times_jumuah_time2, prayer_times.created_at AS prayer_times_created_at, prayer_times.organization_id AS prayer_times_organization_id, prayer_times.organization_name AS prayer_times_organization_name 
+FROM prayer_times 
+WHERE prayer_times.created_at >= %(created_at_1)s AND prayer_times.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[generated in 0.00120s] {'created_at_1': datetime.datetime(2024, 3, 2, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 2, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT prayer_times.id AS prayer_times_id, prayer_times.prayer_name AS prayer_times_prayer_name, prayer_times.athan_time AS prayer_times_athan_time, prayer_times.iqama_time AS prayer_times_iqama_time, prayer_times.jumuah_time AS prayer_times_jumuah_time, prayer_times.jumuah_time2 AS prayer_times_jumuah_time2, prayer_times.created_at AS prayer_times_created_at, prayer_times.organization_id AS prayer_times_organization_id, prayer_times.organization_name AS prayer_times_organization_name 
+FROM prayer_times 
+WHERE prayer_times.created_at >= %(created_at_1)s AND prayer_times.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.006989s ago] {'created_at_1': datetime.datetime(2024, 3, 2, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 2, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:56] "GET /api/v1/prayer_times HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:56] "GET /api/v1/prayer_times HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:56] "GET /api/v1/organizations HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:56] "GET /api/v1/organizations HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:58] "GET /api/v1/organizations HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:58] "GET /api/v1/organizations HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[generated in 0.00160s] {'created_at_1': datetime.datetime(2024, 3, 2, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 2, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:[cached since 0.002352s ago] {'created_at_1': datetime.datetime(2024, 3, 2, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 2, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:58] "GET /api/v1/events HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:58] "GET /api/v1/events HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:[generated in 0.00080s] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:59] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.01284s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:59] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.02932s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.03045s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:59] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:59] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.0425s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:[cached since 0.04274s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:59] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:59] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.05631s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:[cached since 0.05657s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:59] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.06454s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:59] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:59] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.1083s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [02/Mar/2024 21:48:59] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[generated in 0.00195s] {'organization_id_1': 10, 'created_at_1': datetime.datetime(2024, 3, 3, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 3, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:[cached since 0.00417s ago] {'organization_id_1': 10, 'created_at_1': datetime.datetime(2024, 3, 3, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 3, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [03/Mar/2024 08:38:42] "GET /api/v1/events/10 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [03/Mar/2024 08:38:42] "GET /api/v1/events/10 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:[cached since 0.1398s ago] {'organization_id_1': 4, 'created_at_1': datetime.datetime(2024, 3, 3, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 3, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.1429s ago] {'organization_id_1': 4, 'created_at_1': datetime.datetime(2024, 3, 3, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 3, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [03/Mar/2024 08:38:42] "GET /api/v1/events/4 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [03/Mar/2024 08:38:42] "GET /api/v1/events/4 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.3005s ago] {'organization_id_1': 10, 'created_at_1': datetime.datetime(2024, 3, 3, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 3, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:SELECT prayer_times.id AS prayer_times_id, prayer_times.prayer_name AS prayer_times_prayer_name, prayer_times.athan_time AS prayer_times_athan_time, prayer_times.iqama_time AS prayer_times_iqama_time, prayer_times.jumuah_time AS prayer_times_jumuah_time, prayer_times.jumuah_time2 AS prayer_times_jumuah_time2, prayer_times.created_at AS prayer_times_created_at, prayer_times.organization_id AS prayer_times_organization_id, prayer_times.organization_name AS prayer_times_organization_name 
+FROM prayer_times 
+WHERE prayer_times.organization_id = %(organization_id_1)s AND prayer_times.created_at >= %(created_at_1)s AND prayer_times.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.3226s ago] {'organization_id_1': 10, 'created_at_1': datetime.datetime(2024, 3, 3, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 3, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:[generated in 0.00272s] {'organization_id_1': 3, 'created_at_1': datetime.datetime(2024, 3, 3, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 3, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:SELECT prayer_times.id AS prayer_times_id, prayer_times.prayer_name AS prayer_times_prayer_name, prayer_times.athan_time AS prayer_times_athan_time, prayer_times.iqama_time AS prayer_times_iqama_time, prayer_times.jumuah_time AS prayer_times_jumuah_time, prayer_times.jumuah_time2 AS prayer_times_jumuah_time2, prayer_times.created_at AS prayer_times_created_at, prayer_times.organization_id AS prayer_times_organization_id, prayer_times.organization_name AS prayer_times_organization_name 
+FROM prayer_times 
+WHERE prayer_times.organization_id = %(organization_id_1)s AND prayer_times.created_at >= %(created_at_1)s AND prayer_times.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.005708s ago] {'organization_id_1': 3, 'created_at_1': datetime.datetime(2024, 3, 3, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 3, 23, 59, 59)}
+INFO:werkzeug:127.0.0.1 - - [03/Mar/2024 08:38:42] "GET /api/v1/events/10 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [03/Mar/2024 08:38:42] "GET /api/v1/prayer_times/3 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [03/Mar/2024 08:38:42] "GET /api/v1/events/10 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [03/Mar/2024 08:38:42] "GET /api/v1/prayer_times/3 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.4283s ago] {'organization_id_1': 4, 'created_at_1': datetime.datetime(2024, 3, 3, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 3, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 0.4307s ago] {'organization_id_1': 4, 'created_at_1': datetime.datetime(2024, 3, 3, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 3, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [03/Mar/2024 08:38:42] "GET /api/v1/events/4 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [03/Mar/2024 08:38:42] "GET /api/v1/events/4 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 6.133e+04s ago] {'organization_id_1': 10, 'created_at_1': datetime.datetime(2024, 3, 4, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 4, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:40:49] "GET /api/v1/events/10 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 6.133e+04s ago] {'organization_id_1': 10, 'created_at_1': datetime.datetime(2024, 3, 4, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 4, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:40:49] "GET /api/v1/events/10 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 6.133e+04s ago] {'organization_id_1': 4, 'created_at_1': datetime.datetime(2024, 3, 4, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 4, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:40:49] "GET /api/v1/events/4 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 6.133e+04s ago] {'organization_id_1': 4, 'created_at_1': datetime.datetime(2024, 3, 4, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 4, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:40:49] "GET /api/v1/events/4 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 6.133e+04s ago] {'organization_id_1': 10, 'created_at_1': datetime.datetime(2024, 3, 4, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 4, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT prayer_times.id AS prayer_times_id, prayer_times.prayer_name AS prayer_times_prayer_name, prayer_times.athan_time AS prayer_times_athan_time, prayer_times.iqama_time AS prayer_times_iqama_time, prayer_times.jumuah_time AS prayer_times_jumuah_time, prayer_times.jumuah_time2 AS prayer_times_jumuah_time2, prayer_times.created_at AS prayer_times_created_at, prayer_times.organization_id AS prayer_times_organization_id, prayer_times.organization_name AS prayer_times_organization_name 
+FROM prayer_times 
+WHERE prayer_times.organization_id = %(organization_id_1)s AND prayer_times.created_at >= %(created_at_1)s AND prayer_times.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 6.133e+04s ago] {'organization_id_1': 10, 'created_at_1': datetime.datetime(2024, 3, 4, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 4, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:SELECT prayer_times.id AS prayer_times_id, prayer_times.prayer_name AS prayer_times_prayer_name, prayer_times.athan_time AS prayer_times_athan_time, prayer_times.iqama_time AS prayer_times_iqama_time, prayer_times.jumuah_time AS prayer_times_jumuah_time, prayer_times.jumuah_time2 AS prayer_times_jumuah_time2, prayer_times.created_at AS prayer_times_created_at, prayer_times.organization_id AS prayer_times_organization_id, prayer_times.organization_name AS prayer_times_organization_name 
+FROM prayer_times 
+WHERE prayer_times.organization_id = %(organization_id_1)s AND prayer_times.created_at >= %(created_at_1)s AND prayer_times.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:[cached since 6.133e+04s ago] {'organization_id_1': 3, 'created_at_1': datetime.datetime(2024, 3, 4, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 4, 23, 59, 59)}
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:40:50] "GET /api/v1/events/10 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:[cached since 6.133e+04s ago] {'organization_id_1': 3, 'created_at_1': datetime.datetime(2024, 3, 4, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 4, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:40:50] "GET /api/v1/events/10 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:40:50] "GET /api/v1/prayer_times/3 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:40:50] "GET /api/v1/prayer_times/3 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 6.133e+04s ago] {'organization_id_1': 4, 'created_at_1': datetime.datetime(2024, 3, 4, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 4, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:40:50] "GET /api/v1/events/4 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.organization_id = %(organization_id_1)s AND events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 6.133e+04s ago] {'organization_id_1': 4, 'created_at_1': datetime.datetime(2024, 3, 4, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 4, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:40:50] "GET /api/v1/events/4 HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT prayer_times.id AS prayer_times_id, prayer_times.prayer_name AS prayer_times_prayer_name, prayer_times.athan_time AS prayer_times_athan_time, prayer_times.iqama_time AS prayer_times_iqama_time, prayer_times.jumuah_time AS prayer_times_jumuah_time, prayer_times.jumuah_time2 AS prayer_times_jumuah_time2, prayer_times.created_at AS prayer_times_created_at, prayer_times.organization_id AS prayer_times_organization_id, prayer_times.organization_name AS prayer_times_organization_name 
+FROM prayer_times 
+WHERE prayer_times.created_at >= %(created_at_1)s AND prayer_times.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 1.006e+05s ago] {'created_at_1': datetime.datetime(2024, 3, 4, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 4, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:00] "GET /api/v1/prayer_times HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT prayer_times.id AS prayer_times_id, prayer_times.prayer_name AS prayer_times_prayer_name, prayer_times.athan_time AS prayer_times_athan_time, prayer_times.iqama_time AS prayer_times_iqama_time, prayer_times.jumuah_time AS prayer_times_jumuah_time, prayer_times.jumuah_time2 AS prayer_times_jumuah_time2, prayer_times.created_at AS prayer_times_created_at, prayer_times.organization_id AS prayer_times_organization_id, prayer_times.organization_name AS prayer_times_organization_name 
+FROM prayer_times 
+WHERE prayer_times.created_at >= %(created_at_1)s AND prayer_times.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 1.006e+05s ago] {'created_at_1': datetime.datetime(2024, 3, 4, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 4, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:00] "GET /api/v1/prayer_times HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:00] "GET /api/v1/organizations HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:00] "GET /api/v1/organizations HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:03] "GET /api/v1/organizations HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:03] "GET /api/v1/organizations HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 1.006e+05s ago] {'created_at_1': datetime.datetime(2024, 3, 4, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 4, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:03] "GET /api/v1/events HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT events.id AS events_id, events.title AS events_title, events.link AS events_link, events.sub_links AS events_sub_links, events.image AS events_image, events.date AS events_date, events.start_time AS events_start_time, events.end_time AS events_end_time, events.location AS events_location, events.short_description AS events_short_description, events.full_description AS events_full_description, events.other_info AS events_other_info, events.cost AS events_cost, events.category AS events_category, events.created_at AS events_created_at, events.organization_id AS events_organization_id, events.organization_name AS events_organization_name 
+FROM events 
+WHERE events.created_at >= %(created_at_1)s AND events.created_at <= %(created_at_2)s
+INFO:sqlalchemy.engine.Engine:[cached since 1.006e+05s ago] {'created_at_1': datetime.datetime(2024, 3, 4, 0, 0), 'created_at_2': datetime.datetime(2024, 3, 4, 23, 59, 59)}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:03] "GET /api/v1/events HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 1.006e+05s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:03] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 1.006e+05s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:[cached since 1.006e+05s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:[cached since 1.006e+05s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:[cached since 1.006e+05s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:03] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:03] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:[cached since 1.006e+05s ago] {'id_1': 3, 'param_1': 1}
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:03] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:03] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:03] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:[cached since 1.006e+05s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:[cached since 1.006e+05s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:03] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:03] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:[cached since 1.006e+05s ago] {'id_1': 3, 'param_1': 1}
+INFO:sqlalchemy.engine.Engine:SELECT organizations.id AS organizations_id, organizations.name AS organizations_name, organizations.name_short AS organizations_name_short, organizations.location AS organizations_location, organizations.phone_number AS organizations_phone_number, organizations.email AS organizations_email, organizations.description AS organizations_description, organizations.image AS organizations_image, organizations.website AS organizations_website, organizations.facebook AS organizations_facebook, organizations.twitter AS organizations_twitter, organizations.instagram AS organizations_instagram, organizations.youtube AS organizations_youtube 
+FROM organizations 
+WHERE organizations.id = %(id_1)s 
+ LIMIT %(param_1)s
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:sqlalchemy.engine.Engine:[cached since 1.006e+05s ago] {'id_1': 3, 'param_1': 1}
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:03] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2024 01:46:03] "GET /api/v1/organizations/3/image HTTP/1.1" 200 -

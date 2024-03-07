@@ -95,10 +95,10 @@ class KmaSpider:
         try:
             if event_image is not None:
             # eventInfo.append("https://kanatamuslims.ca/" + event_image.find('img')['data-lazy-src'])
-                info["image"] = "https://kanatamuslims.ca/" + event_image.find('img')['data-lazy-src']
+                info["image"] = event_image.find('img')['data-lazy-src']
         except:
             try:
-                info["image"] = "https://kanatamuslims.ca/" + event_image.find('img')['src']
+                info["image"] = event_image.find('img')['src']
             except:
                 info["image"] = "https://kanatamuslims.ca/wp-content/uploads/2024/02/kma_logo-jpg.webp"
         return info

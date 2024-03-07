@@ -43,8 +43,6 @@ class InstagramScraper:
                 if count < skip_count:
                     count += 1
                     continue
-                if post.is_pinned:
-                    print("pinned post: ", post.url)
                 else:
                     latest_posts.append(post)
 
@@ -54,8 +52,6 @@ class InstagramScraper:
                     break
 
             posts = []
-            print("latest_posts: ", latest_posts)
-
             for post in latest_posts:
                 single_post = {}
                 # get image url and extract image from it then forward it instead of url
@@ -74,6 +70,7 @@ class InstagramScraper:
                         single_post["link"] = "https://www.instagram.com/p/" + post.shortcode
                         single_post["username"] = username
                         single_post["userid"] = profile.userid
+                        single_post["is_video"] = post.is_video
                         posts.append(single_post)
                         # posts.append((post.caption, image, username, profile.userid, "https://www.instagram.com/p/" + post.shortcode))
                     else:
@@ -82,6 +79,7 @@ class InstagramScraper:
                         single_post["link"] = "https://www.instagram.com/p/" + post.shortcode
                         single_post["username"] = username
                         single_post["userid"] = profile.userid
+                        single_post["is_video"] = post.is_video
                         posts.append(single_post)
                         # posts.append((post.caption, post.url, username, profile.userid, "https://www.instagram.com/p/" + post.shortcode))
                 else:

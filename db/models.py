@@ -1,17 +1,18 @@
-from sqlalchemy import create_engine, Column, String, Integer, DateTime, ForeignKey, text, Text
+from sqlalchemy import create_engine, Column, String, Integer, DateTime, ForeignKey, text, Text, Boolean
 from sqlalchemy.dialects.mysql import MEDIUMTEXT as MEDIUMTEXT, LONGTEXT as LongText
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
-
+from sqlalchemy.exc import OperationalError
+import time
 
 Base = declarative_base()
 
 class Organization(Base):
     __tablename__ = 'organizations'
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
-    name_short = Column(String(100))
+    name = Column(String(250), nullable=False, unique=True)
+    name_short = Column(String(100), nullable=False, unique=True)
     location = Column(String(500))
     phone_number = Column(String(250))
     email = Column(String(250))
@@ -23,7 +24,7 @@ class Organization(Base):
     instagram = Column(String(500))
     youtube = Column(String(500))
     events = relationship('Event', back_populates='organization')
-    prayer_times = relationship('PrayerTime', back_populates='organization')
+    prayer_times = relationship('PrayerTime', back_populates='organization') 
 
     def __repr__(self):
         return f'<Organization {self.name}>'
@@ -62,7 +63,10 @@ class Event(Base):
     cost = Column(String(100))
     category = Column(String(250))
     created_at = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
-    organization_id = Column(Integer, ForeignKey('organizations.id'))
+    # organization_id = Column(Integer, ForeignKey('organizations.id'))
+    is_video = Column(Boolean, default=False)
+    organization_id = Column(Integer)
+    organization_name = Column(String(100), ForeignKey('organizations.name_short'), nullable=False)  # Add organization_name as a foreign key
     organization = relationship('Organization', back_populates='events')
 
     def __repr__(self):
@@ -85,8 +89,9 @@ class Event(Base):
             'cost': self.cost,
             'category': self.category,
             'created_at': self.created_at,
-            'organization_id': self.organization_id
-
+            'organization_id': self.organization_id,
+            'organization_name': self.organization_name,
+            'is_video': self.is_video
         }
 
 class PrayerTime(Base):
@@ -99,6 +104,7 @@ class PrayerTime(Base):
     jumuah_time2 = Column(String(50))
     created_at = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     organization_id = Column(Integer, ForeignKey('organizations.id'))
+    organization_name = Column(String(100))
     organization = relationship('Organization', back_populates='prayer_times')
 
     def __repr__(self):
@@ -118,9 +124,15 @@ class PrayerTime(Base):
 
 class Database:
     def __init__(self, username, password, host, port, database_name):
+        # Create a connection to the database using pymsql
         self.engine = create_engine(
             f'mysql+pymysql://{username}:{password}@{host}:{port}/{database_name}',
             echo=True,  # Set to False in production
+            pool_size=20,
+            max_overflow=0,
+            pool_timeout=20,
+            pool_recycle=60*60,
+            pool_pre_ping=True
         )
         Base.metadata.create_all(self.engine)
         self.Session = sessionmaker(bind=self.engine)
@@ -139,45 +151,101 @@ class Database:
             session.commit()
         session.close()
 
+
     def add_event(self, title=None, date=None, image=None, link=None, start_time=None, end_time=None, location=None, 
-                  short_description=None, full_description=None, category=None, organization_id=None, sub_links=None, other_info=None, created_at=None, cost=None):
-        session = self.Session()
+                short_description=None, full_description=None, category=None, organization_id=None, sub_links=None, other_info=None, created_at=None, cost=None, organization_name=None, is_video=False):
+        # Session = self.connection_pool.get_initialized_connection_pool()
+        max_retries = 5
+        for attempt in range(max_retries):
+            session = self.Session()
+            try:
+                if title is None or title == "":
+                    existing_event = session.query(Event).filter(Event.image == image, Event.organization_id == organization_id).first()
+                else:
+                    existing_event = session.query(Event).filter(Event.title == title, Event.organization_id == organization_id).first()
 
-        # check if title is null or empty
-        # Check if the event already exists in the database by checking the title and organization_id however if title is null or empty then check by image and organization_id. If it exists, update the existing entry, otherwise add a new entry
-        # existing_event = session.query(Event).filter( (Event.title == title and Event.organization_id == organization_id) or (Event.image == image and Event.organization_id == organization_id) ).first()
-        if title is None or title == "":
-            existing_event = session.query(Event).filter(Event.image == image, Event.organization_id == organization_id).first()
-        else:
-            existing_event = session.query(Event).filter(Event.title == title, Event.organization_id == organization_id).first()
+                if not existing_event:
+                    new_event = Event(title=title, date=date, start_time=start_time, end_time=end_time,
+                                    location=location, link=link, image=image,
+                                    short_description=short_description, full_description=full_description,
+                                    category=category, organization_id=organization_id, created_at=created_at, sub_links=sub_links, other_info=other_info, cost=cost, organization_name=organization_name, is_video=is_video)
+                    session.add(new_event)
+                else:
+                    # Update existing event
+                    existing_event.title = title
+                    existing_event.date = date
+                    existing_event.start_time = start_time
+                    existing_event.end_time = end_time
+                    existing_event.location = location
+                    existing_event.link = link
+                    existing_event.image = image
+                    existing_event.short_description = short_description
+                    existing_event.full_description = full_description
+                    existing_event.category = category
+                    existing_event.organization_id = organization_id
+                    existing_event.organization_name = organization_name
+                    existing_event.created_at = created_at
+                    existing_event.sub_links = sub_links
+                    existing_event.other_info = other_info
+                    existing_event.cost = cost
+                    existing_event.is_video = is_video
+                session.commit()
+                break
+            except OperationalError as e:
+                if attempt < max_retries - 1:
+                    wait_time = 2 ** attempt  # exponential backoff
+                    print(f"Got an error: {e}. Retrying in {wait_time} seconds...")
+                    time.sleep(wait_time)
+                else:
+                    raise # If it's the last attempt, raise the exception
+            finally:
+                session.close()
+    # def add_event(self, title=None, date=None, image=None, link=None, start_time=None, end_time=None, location=None, 
+    #               short_description=None, full_description=None, category=None, organization_id=None, sub_links=None, other_info=None, created_at=None, cost=None, organization_name=None, is_video=False):
+    #     session = self.Session()
 
-        if not existing_event:
-            new_event = Event(title=title, date=date, start_time=start_time, end_time=end_time,
-                            location=location, link=link, image=image,
-                            short_description=short_description, full_description=full_description,
-                            category=category, organization_id=organization_id, created_at=created_at, sub_links=sub_links, other_info=other_info, cost=cost)
-            session.add(new_event)
-            session.commit()
-        else:
-            existing_event.title = title
-            existing_event.date = date
-            existing_event.start_time = start_time
-            existing_event.end_time = end_time
-            existing_event.location = location
-            existing_event.link = link
-            existing_event.image = image
-            existing_event.short_description = short_description
-            existing_event.full_description = full_description
-            existing_event.category = category
-            existing_event.organization_id = organization_id
-            existing_event.created_at = created_at
-            existing_event.sub_links = sub_links
-            existing_event.other_info = other_info
-            existing_event.cost = cost
-            session.commit()
-        session.close()
+        # while True:
+        #     try:
+        #         if title is None or title == "":
+        #             existing_event = session.query(Event).filter(Event.image == image, Event.organization_id == organization_id).first()
+        #         else:
+        #             existing_event = session.query(Event).filter(Event.title == title, Event.organization_id == organization_id).first()
 
-    def add_prayer_time(self, prayer_name, athan_time, iqama_time=None, jumuah_time=None, jumuah_time2=None, organization_id=None):
+        #         if not existing_event:
+        #             new_event = Event(title=title, date=date, start_time=start_time, end_time=end_time,
+        #                             location=location, link=link, image=image,
+        #                             short_description=short_description, full_description=full_description,
+        #                             category=category, organization_id=organization_id, created_at=created_at, sub_links=sub_links, other_info=other_info, cost=cost, organization_name=organization_name, is_video=is_video)
+        #             session.add(new_event)
+        #             session.commit()
+        #         else:
+        #             existing_event.title = title
+        #             existing_event.date = date
+        #             existing_event.start_time = start_time
+        #             existing_event.end_time = end_time
+        #             existing_event.location = location
+        #             existing_event.link = link
+        #             existing_event.image = image
+        #             existing_event.short_description = short_description
+        #             existing_event.full_description = full_description
+        #             existing_event.category = category
+        #             existing_event.organization_id = organization_id
+        #             existing_event.organization_name = organization_name
+        #             existing_event.created_at = created_at
+        #             existing_event.sub_links = sub_links
+        #             existing_event.other_info = other_info
+        #             existing_event.cost = cost
+        #             existing_event.is_video = is_video
+        #             session.commit()
+        #         break
+        #     except Exception as e:
+        #         print(e)
+        #         session.rollback()
+        #         session.close()
+        #         session = self.Session()
+        # session.close()
+
+    def add_prayer_time(self, prayer_name, athan_time, iqama_time=None, jumuah_time=None, jumuah_time2=None, organization_id=None, organization_name=None):
         session = self.Session()
 
         existing_prayer_times = session.query(PrayerTime).filter(
@@ -185,12 +253,13 @@ class Database:
         ).all()
 
         for existing_prayer_time in existing_prayer_times:
-            if existing_prayer_time.prayer_name == prayer_name and (existing_prayer_time.athan_time != athan_time or existing_prayer_time.iqama_time != iqama_time or existing_prayer_time.jumuah_time != jumuah_time):
+            if existing_prayer_time.prayer_name == prayer_name:
                 # Update the existing entry
                 existing_prayer_time.athan_time = athan_time
                 existing_prayer_time.iqama_time = iqama_time
                 existing_prayer_time.jumuah_time = jumuah_time
                 existing_prayer_time.jumuah_time2 = jumuah_time2
+                existing_prayer_time.created_at = datetime.now()
                 session.commit()
                 break
 
@@ -198,7 +267,7 @@ class Database:
             # If the loop completes without a break, it means no existing entry has been updated,
             # so add a new prayer time
             new_prayer_time = PrayerTime(prayer_name=prayer_name, athan_time=athan_time,
-                                         iqama_time=iqama_time, jumuah_time=jumuah_time, jumuah_time2=jumuah_time2, organization_id=organization_id)
+                                         iqama_time=iqama_time, jumuah_time=jumuah_time, jumuah_time2=jumuah_time2, organization_id=organization_id, organization_name=organization_name)
             
             session.add(new_prayer_time)
             session.commit()
@@ -277,12 +346,14 @@ class Database:
     def get_all_prayer_times(self):
         session = self.Session()
         now = datetime.now()
+        # check if it already exists in the database and if it does, update the existing entry, otherwise add a new entry
         start_of_day = datetime(now.year, now.month, now.day)
         end_of_day = start_of_day + timedelta(days=1, seconds=-1)
-        prayer_times = session.query(PrayerTime).filter(PrayerTime.created_at >= start_of_day, PrayerTime.created_at <= end_of_day).all()
-        prayer_times = [prayer_time.to_dict() for prayer_time in prayer_times]
+        existing_prayer_times = session.query(PrayerTime).filter(PrayerTime.created_at >= start_of_day, PrayerTime.created_at <= end_of_day).all()
+        prayer_times = [prayer_time.to_dict() for prayer_time in existing_prayer_times]
         session.close()
         return prayer_times
+        
     
     def get_all_events_by_organization_today(self, organization_id):
         session = self.Session()
@@ -331,3 +402,8 @@ class Database:
         session.close()
         return prayer_times
     
+    def get_organization_image(self, org_id):
+        session = self.Session()
+        organization = session.query(Organization).filter(Organization.id == org_id).first()
+        session.close()
+        return organization.image
