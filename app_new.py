@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, send_from_directory, render_template
 from flask_cors import CORS
+from flask_caching import Cache
 from db.config import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME
 from db.models import Database
 from datetime import datetime
@@ -7,6 +8,8 @@ import logging
 
 
 app = Flask(__name__, static_folder='../client/build/static', template_folder="../client/build")
+app.config['CACHE_TYPE'] = 'simple'  # Simple memory cache
+cache = Cache(app)
 # app = Flask(__name__, static_folder="./build/static", template_folder="./build")
 
 CORS(app)
@@ -29,53 +32,61 @@ organizationsCallTime = datetime.now()
 
 @app.route('/robots.txt', methods=['GET'])
 def robots():
-    return send_from_directory(app.static_folder, "robots.txt")
+    return send_from_directory(app.template_folder, "robots.txt")
 
 @app.route('/sitemap.xml', methods=['GET'])
 def sitemap():
-    return send_from_directory(app.static_folder, "sitemap.xml")
+    return send_from_directory(app.template_folder, "sitemap.xml")
 
 @app.route('/favicon.ico', methods=['GET'])
 def favicon():
-    return send_from_directory(app.static_folder, "favicon.ico")
+    return send_from_directory(app.template_folder, "favicon.ico")
 
 @app.route('/api/v1/events')
+@cache.cached(timeout=87400)  # Cache timeout set to 86400 seconds (24 hours)
 def get_events_all():
     # get all events from the database
-    events = db.get_all_events_created_today()
+    events = db.get_all_active_events()  # Using the new function to get active events
+    # events = db.get_all_events_created_today()
     return jsonify(events)
 
 @app.route('/api/v1/events/<int:organization_id>')
+@cache.cached(timeout=87400, query_string=True)  # Considers query string parameters for caching
 def get_events(organization_id):
     # get all events from the database
-    events = db.get_all_events_by_organization_today(organization_id)
+    events = db.get_all_events_by_organization_active(organization_id)
     return jsonify(events)
 
 @app.route('/api/v1/events/<string:organization_name>')
+@cache.cached(timeout=87400, query_string=True)  # Considers query string parameters for caching
 def get_events_by_name(organization_name):
     # get all events from the database
     events = db.get_all_events_by_organization_name(organization_name)
     return jsonify(events)
 
 @app.route('/api/v1/prayer_times')
+@cache.cached(timeout=87400, query_string=True)  # Considers query string parameters for caching
 def get_prayer_times_all():
     # get all events from the database
     prayer_times = db.get_all_prayer_times()
     return jsonify(prayer_times)
 
 @app.route('/api/v1/prayer_times/<int:organization_id>')
+@cache.cached(timeout=87400, query_string=True)  # Considers query string parameters for caching
 def get_prayer_times(organization_id):
     # get all events from the database
     prayer_times = db.get_all_prayer_times_by_organization(organization_id)
     return jsonify(prayer_times)
 
 @app.route('/api/v1/prayer_times/<string:organization_name>')
+@cache.cached(timeout=87400, query_string=True)  # Considers query string parameters for caching
 def get_prayer_times_by_name(organization_name):
     # get all events from the database
     prayer_times = db.get_all_prayer_times_by_organization_name(organization_name)
     return jsonify(prayer_times)
 
 @app.route('/api/v1/organizations')
+@cache.cached(timeout=87400)
 def get_organizations():
     # get all organizations from the database
     global organizations, organizationsCallTime
@@ -85,6 +96,7 @@ def get_organizations():
     return jsonify(organizations)
 
 @app.route('/api/v1/organizations/<int:organization_id>/image')
+@cache.cached(timeout=87400, query_string=True)  # Considers query string parameters for caching
 def get_organization_image(organization_id):
     # get all organizations from the database
     image = db.get_organization_image(organization_id)

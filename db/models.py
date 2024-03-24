@@ -61,10 +61,13 @@ class Event(Base):
     full_description = Column(MEDIUMTEXT)
     other_info = Column(MEDIUMTEXT)
     cost = Column(String(100))
-    category = Column(String(250))
     created_at = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     # organization_id = Column(Integer, ForeignKey('organizations.id'))
     is_video = Column(Boolean, default=False)
+    is_new = Column(Boolean)
+    is_active = Column(Boolean, default=False, nullable=False)
+    updated_at = Column(DateTime, server_default=text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
+    categories = Column(String(500))
     organization_id = Column(Integer)
     organization_name = Column(String(100), ForeignKey('organizations.name_short'), nullable=False)  # Add organization_name as a foreign key
     organization = relationship('Organization', back_populates='events')
@@ -87,11 +90,14 @@ class Event(Base):
             'full_description': self.full_description,
             'other_info': self.other_info,
             'cost': self.cost,
-            'category': self.category,
             'created_at': self.created_at,
             'organization_id': self.organization_id,
             'organization_name': self.organization_name,
-            'is_video': self.is_video
+            'is_video': self.is_video,
+            'is_new': self.is_new,
+            'is_active': self.is_active,
+            'updated_at': self.updated_at,
+            'categories ': self.categories,
         }
 
 class PrayerTime(Base):
@@ -153,7 +159,7 @@ class Database:
 
 
     def add_event(self, title=None, date=None, image=None, link=None, start_time=None, end_time=None, location=None, 
-                short_description=None, full_description=None, category=None, organization_id=None, sub_links=None, other_info=None, created_at=None, cost=None, organization_name=None, is_video=False):
+                short_description=None, full_description=None, categories=None, organization_id=None, sub_links=None, other_info=None, created_at=None, cost=None, organization_name=None, is_video=False):
         # Session = self.connection_pool.get_initialized_connection_pool()
         max_retries = 5
         for attempt in range(max_retries):
@@ -168,7 +174,7 @@ class Database:
                     new_event = Event(title=title, date=date, start_time=start_time, end_time=end_time,
                                     location=location, link=link, image=image,
                                     short_description=short_description, full_description=full_description,
-                                    category=category, organization_id=organization_id, created_at=created_at, sub_links=sub_links, other_info=other_info, cost=cost, organization_name=organization_name, is_video=is_video)
+                                    categories=categories, organization_id=organization_id, created_at=created_at, sub_links=sub_links, other_info=other_info, cost=cost, organization_name=organization_name, is_video=is_video, is_new=True, is_active=True, updated_at=datetime.now())
                     session.add(new_event)
                 else:
                     # Update existing event
@@ -181,7 +187,7 @@ class Database:
                     existing_event.image = image
                     existing_event.short_description = short_description
                     existing_event.full_description = full_description
-                    existing_event.category = category
+                    existing_event.categories = categories
                     existing_event.organization_id = organization_id
                     existing_event.organization_name = organization_name
                     existing_event.created_at = created_at
@@ -189,6 +195,10 @@ class Database:
                     existing_event.other_info = other_info
                     existing_event.cost = cost
                     existing_event.is_video = is_video
+                    existing_event.is_new = False
+                    existing_event.updated_at = datetime.now()
+                    existing_event.is_active = True
+
                 session.commit()
                 break
             except OperationalError as e:
@@ -200,50 +210,6 @@ class Database:
                     raise # If it's the last attempt, raise the exception
             finally:
                 session.close()
-    # def add_event(self, title=None, date=None, image=None, link=None, start_time=None, end_time=None, location=None, 
-    #               short_description=None, full_description=None, category=None, organization_id=None, sub_links=None, other_info=None, created_at=None, cost=None, organization_name=None, is_video=False):
-    #     session = self.Session()
-
-        # while True:
-        #     try:
-        #         if title is None or title == "":
-        #             existing_event = session.query(Event).filter(Event.image == image, Event.organization_id == organization_id).first()
-        #         else:
-        #             existing_event = session.query(Event).filter(Event.title == title, Event.organization_id == organization_id).first()
-
-        #         if not existing_event:
-        #             new_event = Event(title=title, date=date, start_time=start_time, end_time=end_time,
-        #                             location=location, link=link, image=image,
-        #                             short_description=short_description, full_description=full_description,
-        #                             category=category, organization_id=organization_id, created_at=created_at, sub_links=sub_links, other_info=other_info, cost=cost, organization_name=organization_name, is_video=is_video)
-        #             session.add(new_event)
-        #             session.commit()
-        #         else:
-        #             existing_event.title = title
-        #             existing_event.date = date
-        #             existing_event.start_time = start_time
-        #             existing_event.end_time = end_time
-        #             existing_event.location = location
-        #             existing_event.link = link
-        #             existing_event.image = image
-        #             existing_event.short_description = short_description
-        #             existing_event.full_description = full_description
-        #             existing_event.category = category
-        #             existing_event.organization_id = organization_id
-        #             existing_event.organization_name = organization_name
-        #             existing_event.created_at = created_at
-        #             existing_event.sub_links = sub_links
-        #             existing_event.other_info = other_info
-        #             existing_event.cost = cost
-        #             existing_event.is_video = is_video
-        #             session.commit()
-        #         break
-        #     except Exception as e:
-        #         print(e)
-        #         session.rollback()
-        #         session.close()
-        #         session = self.Session()
-        # session.close()
 
     def add_prayer_time(self, prayer_name, athan_time, iqama_time=None, jumuah_time=None, jumuah_time2=None, organization_id=None, organization_name=None):
         session = self.Session()
@@ -343,6 +309,18 @@ class Database:
         session.close()
         return events
     
+    def get_all_active_events(self):
+        with self.Session() as session:  # Using a context manager for automatic session handling
+            # Filter to select only active events
+            active_events = session.query(Event).filter(
+                Event.is_active == True
+            ).all()
+
+            # Convert the events to dictionaries for easier handling in the API
+            active_events = [event.to_dict() for event in active_events]
+
+        return active_events
+
     def get_all_prayer_times(self):
         session = self.Session()
         now = datetime.now()
@@ -362,6 +340,14 @@ class Database:
         start_of_day = datetime(now.year, now.month, now.day)
         end_of_day = start_of_day + timedelta(days=1, seconds=-1)
         events = session.query(Event).filter(Event.organization_id == organization_id, Event.created_at >= start_of_day, Event.created_at <= end_of_day).all()
+        events = [event.to_dict() for event in events]
+        session.close()
+        return events
+    
+    def get_all_events_by_organization_active(self, organization_id):
+        session = self.Session()
+        # get all events by organization id and created today
+        events = session.query(Event).filter(Event.organization_id == organization_id, Event.is_active == True).all()
         events = [event.to_dict() for event in events]
         session.close()
         return events
@@ -407,3 +393,14 @@ class Database:
         organization = session.query(Organization).filter(Organization.id == org_id).first()
         session.close()
         return organization.image
+    def update_old_activity(self):
+        session = self.Session()
+        # check if is_active is True and it the updated_at is not today, then set is_active to False
+        now = datetime.now()
+        start_of_day = datetime(now.year, now.month, now.day)
+        end_of_day = start_of_day + timedelta(days=1, seconds=-1)
+        events = session.query(Event).filter(Event.is_active == True, Event.updated_at < start_of_day).all()
+        for event in events:
+            event.is_active = False
+        session.commit()
+        session.close()

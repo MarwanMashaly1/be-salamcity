@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
-
 class RahmaSpider:
     def __init__(self):
         self.events_page = urlopen("https://www.mymasjid.ca/events").read()

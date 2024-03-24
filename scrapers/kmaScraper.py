@@ -112,7 +112,7 @@ class KmaSpider:
         athan_times = json.loads(data.split('"times":')[1].split(',"shuruq"')[0])
         iqamaCalendar = data.split('"iqamaCalendar":')[1].split('};')[0]
         jumua = data.split('"jumua":')[1].split(',"jumua2"')[0]
-        jumua2 = data.split('"jumua2":')[1].split(',"jumuaAsDuhr"')[0]
+        jumua2 = data.split('"jumua2":')[1].split(',"jumua3"')[0]
         # shuruq_time = data.split('"shuruq":')[1].split(',"calendar"')[0]
 
         iqama_json = json.loads(iqamaCalendar)
