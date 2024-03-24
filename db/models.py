@@ -65,6 +65,7 @@ class Event(Base):
     created_at = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     # organization_id = Column(Integer, ForeignKey('organizations.id'))
     is_video = Column(Boolean, default=False)
+    is_new = Column(Boolean)
     organization_id = Column(Integer)
     organization_name = Column(String(100), ForeignKey('organizations.name_short'), nullable=False)  # Add organization_name as a foreign key
     organization = relationship('Organization', back_populates='events')
@@ -91,7 +92,8 @@ class Event(Base):
             'created_at': self.created_at,
             'organization_id': self.organization_id,
             'organization_name': self.organization_name,
-            'is_video': self.is_video
+            'is_video': self.is_video,
+            'is_new': self.is_new
         }
 
 class PrayerTime(Base):
@@ -168,7 +170,7 @@ class Database:
                     new_event = Event(title=title, date=date, start_time=start_time, end_time=end_time,
                                     location=location, link=link, image=image,
                                     short_description=short_description, full_description=full_description,
-                                    category=category, organization_id=organization_id, created_at=created_at, sub_links=sub_links, other_info=other_info, cost=cost, organization_name=organization_name, is_video=is_video)
+                                    category=category, organization_id=organization_id, created_at=created_at, sub_links=sub_links, other_info=other_info, cost=cost, organization_name=organization_name, is_video=is_video, is_new=True)
                     session.add(new_event)
                 else:
                     # Update existing event
@@ -189,6 +191,8 @@ class Database:
                     existing_event.other_info = other_info
                     existing_event.cost = cost
                     existing_event.is_video = is_video
+                    existing_event.is_new = False
+
                 session.commit()
                 break
             except OperationalError as e:

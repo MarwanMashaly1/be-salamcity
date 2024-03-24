@@ -37,17 +37,19 @@ class InstagramScraper:
             count = 0
             latest_posts = []
             skip_count = 2 if username.lower() == "carletonmsa" else 0
+            skip_count = 1 if username.lower() == "algonquinmsa_" else 0
             total_posts = 3
 
             for post in posts:
+                
                 if count < skip_count:
                     count += 1
                     continue
+                elif post.is_video:
+                    continue
                 else:
                     latest_posts.append(post)
-
                 count += 1
-
                 if count == total_posts:
                     break
 

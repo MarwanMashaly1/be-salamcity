@@ -29,15 +29,15 @@ organizationsCallTime = datetime.now()
 
 @app.route('/robots.txt', methods=['GET'])
 def robots():
-    return send_from_directory(app.static_folder, "robots.txt")
+    return send_from_directory(app.template_folder, "robots.txt")
 
 @app.route('/sitemap.xml', methods=['GET'])
 def sitemap():
-    return send_from_directory(app.static_folder, "sitemap.xml")
+    return send_from_directory(app.template_folder, "sitemap.xml")
 
 @app.route('/favicon.ico', methods=['GET'])
 def favicon():
-    return send_from_directory(app.static_folder, "favicon.ico")
+    return send_from_directory(app.template_folder, "favicon.ico")
 
 @app.route('/api/v1/events')
 def get_events_all():
