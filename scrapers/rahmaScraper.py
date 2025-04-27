@@ -1,49 +1,54 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+import time, random
+from utils.browser import get_html
 
 class RahmaSpider:
-    def __init__(self):
-        self.events_page = urlopen("https://www.mymasjid.ca/events").read()
-        self.prayer_page = urlopen(
-            "https://app.mymasjid.ca/protected/public/timetable").read()
+    def __init__(self, proxy_list=None):
+        self.proxy_list = proxy_list or []
+        # Fetch events page HTML
+        events_url = "https://www.mymasjid.ca/events"
+        self.events_page = get_html(events_url, proxy_list=self.proxy_list)
+        
+        # Fetch prayer times page HTML
+        prayer_url = "https://app.mymasjid.ca/protected/public/timetable"
+        self.prayer_page = get_html(prayer_url, proxy_list=self.proxy_list)
+        
         self.events_soup = BeautifulSoup(self.events_page, 'html.parser')
         self.prayer_soup = BeautifulSoup(self.prayer_page, 'html.parser')
+        print("Rahma Spider initialized")
 
     def get_events(self):
         events = []
         table = self.events_soup.find(lambda tag: tag.name == 'table' and tag.has_attr(
             'id') and tag['id'] == "tablepress-4")
+        
         rows = table.findAll(lambda tag: tag.name == 'tr')
         for row in rows:
             if row.find('td') is not None:
                 event = {}
                 # event_name = row.find('td').text
                 event["title"] = row.find('td').text
-                event_link = row.find('a')['href']
-                event["link"] = event_link
-                event_info = self.get_eventInfo(event_link)
-                if "image" in event_info:
-                    event["image"] = event_info["image"]
-                # else:
-                #     event_image = None
-                if "description" in event_info:
-                    event["description"] = event_info["description"]
+                # check if href exists if yes get url
+                if row.find('a') is not None:
+                    event_link = row.find('a')['href']
+                
+                    # check if it is not null
+                    event["link"] = event_link
+                    # check if event link is a google forms link
+                    if "google.com" not in event_link:
+                        event_info = self.get_eventInfo(event_link)
+                        if "image" in event_info:
+                            event["image"] = event_info["image"]
+                        if "description" in event_info:
+                            event["description"] = event_info["description"]
+                else:
+                    event["link"] = "https://events.mymasjid.ca/events"
+
 
                 events.append(event)
-                # else:
-                #     event_description = None
-                    
-                # if len(event_info) > 0:
-                #     event_description = event_info[0]
-                # else:
-                #     event_description = None
-                # if len(event_info) > 1:
-                #     event_image = event_info[1]
-                # else:
-                #     event_image = None
-                # append to events based on how it should look like in the orm
-                # events.append((event_name, event_link, event_image, event_description))
-                # events.append((event_name, event_link, event_description, "Rahma"))
+                time.sleep(random.uniform(2, 5))
+        print(events)
         return events
 
     def get_prayerTimes(self):
@@ -76,11 +81,6 @@ class RahmaSpider:
         event_description = event_soup.find(class_='content event_details')
         if event_description is not None:
             eventInfo["description"] = event_description.text
-            # eventInfo.append(event_description.text)
-            # for description in event_description.find_all('p'):
-            #     eventInfo.append(description.text)
-            # for description in event_description.find_all('li'):
-            #     eventInfo.append("point: " + description.text)
 
         if event_soup.find(class_='content event_poster') is not None:
             event_image = event_soup.find(class_='content event_poster')

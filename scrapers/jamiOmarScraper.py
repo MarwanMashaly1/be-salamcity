@@ -6,6 +6,8 @@ class JamiOmarSpider:
     def __init__(self) -> None:
         self.page = urlopen("https://www.jamiomar.org/")
         self.soup = BeautifulSoup(self.page, 'html.parser')
+
+        print("Jami Omar Spider initialized")
     
     
     def get_events(self):

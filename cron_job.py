@@ -7,12 +7,14 @@ from scrapers.rahmaScraper import RahmaSpider
 from scrapers.snmcScraper import SnmcSpider
 from scrapers.kmaScraper import KmaSpider
 from scrapers.jamiOmarScraper import JamiOmarSpider
+from scrapers.bukhariScraper import BukhariSpider
 from datetime import datetime
 # import the rate limiter
 import time
 from utils.rateLimiter import RateLimiter
 import logging
 from categorization.categoriy import Categorize
+import utils.proxies as proxies
 
 # create a database object
 db = Database(DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME)
@@ -22,47 +24,31 @@ cat = Categorize(token_counter_min=0, rpd=0, rpm=0)
 
 def add_details():
     print("Adding details")
-
+    proxy_list = proxies.get_proxies()
     # create a webscraper object`
-    rahma = RahmaSpider()
-    snmc = SnmcSpider()
-    kma = KmaSpider()
-    jamiOmar = JamiOmarSpider()
-    insta = InstagramScraper() 
+    rahma = RahmaSpider(proxy_list=proxy_list)
+    snmc = SnmcSpider(proxy_list=proxy_list)
+    kma = KmaSpider(proxy_list=proxy_list)
+    jamiOmar = JamiOmarSpider(proxy_list=proxy_list)
+    # bukhari = BukhariSpider(proxy_list=proxy_list)
+    # insta = InstagramScraper() 
 
     # get the events and prayer times from the webscrapers
     rahmaEvents = rahma.get_events()
     rahmaPrayerTimes = rahma.get_prayerTimes()
-    snmcEvents = insta.get_latest_posts("snmc.ca")
+    snmcEvents = snmc.get_events()
     snmcPrayerTimes = snmc.get_prayerTimes()
     kmaEvents = kma.get_events()
     kmaPrayerTimes = kma.get_prayerTimes()
     jamiOmarEvents = jamiOmar.get_events()
-    # jamiOmarPrayerTimes = jamiOmar.get_prayerTimes()
-
-    uomsaEvents =  insta.get_latest_posts("uomsa.aemuo")
-    print("uomsa events: ", uomsaEvents)
-    time.sleep(60)
-    cumsaEvents = insta.get_latest_posts("carletonmsa")
-    print("cumsa events: ", cumsaEvents)
-    time.sleep(60)
-    ottawaMosqueEvents = insta.get_latest_posts("theottawamosque")
-    print("ottawa mosque events: ", ottawaMosqueEvents)
-    time.sleep(60)
-    bicEvents = insta.get_latest_posts("barrhavenislamiccentre")
-    print("bic events: ", bicEvents)
-    time.sleep(60)
-    algonquinEvents = insta.get_latest_posts("algonquinmsa_")
-    print("algonquin events: ", algonquinEvents)
-    time.sleep(60)
-    bukharicenterEvents = insta.get_latest_posts("bukharicentre")
-    print("bukhari center events: ", bukharicenterEvents)
-    print("\n\n")
+    # # jamiOmarPrayerTimes = jamiOmar.get_prayerTimes()
+    # bukharicenterEvents = bukhari.get_events()
+    # ottawaMosqueEvents = insta.get_latest_posts("theottawamosque", 2)
+    # print("ottawa mosque events: ", ottawaMosqueEvents)
+    # time.sleep(60)
 
     # add the events and prayer times to the database
     for event in rahmaEvents:
-        created_at = datetime.now()
-        created_at = created_at.strftime("%Y-%m-%d %H:%M:%S")
         category = categorize_events(event.get("title"), event.get("description"))
         with rate_limiter:
             new_event = Event(
@@ -107,41 +93,6 @@ def add_details():
             db.add_prayer_time(prayer_time.get("prayer_name"), prayer_time.get("athan_time"), prayer_time.get("iqama_time"), organization_id=4, organization_name="KMA")
             logging.info("Added kma prayer time to database: " + prayer_time.get("prayer_name"))
             
-    for event in uomsaEvents:
-        category = categorize_events(event.get("title"), event.get("description"))
-        with rate_limiter:
-            db.add_event(full_description= event.get("description"), image= event.get("image"), link= event.get("link"), organization_id=10, created_at=datetime.now(), organization_name="UOMSA", is_video=event.get("is_video"), categories=category)
-            logging.info("Added uomsa event to database: " + event.get("link"))
-    print("uomsa events added")
-    for event in cumsaEvents:
-        category = categorize_events(event.get("title"), event.get("description"))
-        with rate_limiter:
-            db.add_event(full_description= event.get("description"), image= event.get("image"), link= event.get("link"), organization_id=9, created_at=datetime.now(), organization_name="CUMSA", is_video=event.get("is_video"), categories=category)
-            logging.info("Added cumsa event to database: " + event.get("link"))
-    print("cumsa events added")
-    for event in ottawaMosqueEvents:
-        category = categorize_events(event.get("title"), event.get("description"))
-        with rate_limiter:
-            db.add_event(full_description= event.get("description"), image= event.get("image"), link= event.get("link"), organization_id=1, created_at=datetime.now(), organization_name="OMA", is_video=event.get("is_video"), categories=category)
-            logging.info("Added ottawa mosque event to database: " + event.get("link"))
-    print("ottawa mosque events added")
-    for event in bicEvents:
-        category = categorize_events(event.get("title"), event.get("description"))
-        with rate_limiter:
-            db.add_event(full_description= event.get("description"), image= event.get("image"), link= event.get("link"), organization_id=8, created_at=datetime.now(), organization_name="BIC", is_video=event.get("is_video"), categories=category)
-            logging.info("Added bic event to database: " + event.get("link"))
-
-    for event in algonquinEvents:
-        category = categorize_events(event.get("title"), event.get("description"))
-        with rate_limiter:
-            db.add_event(full_description= event.get("description"), image= event.get("image"), link= event.get("link"), organization_id=11, created_at=datetime.now(), organization_name="AMSA", is_video=event.get("is_video"), categories=category)
-            logging.info("Added algonquin event to database: " + event.get("link"))
-
-    for event in bukharicenterEvents:
-        category = categorize_events(event.get("title"), event.get("description"))
-        with rate_limiter:
-            db.add_event(full_description= event.get("description"), image= event.get("image"), link= event.get("link"), organization_id=13, created_at=datetime.now(), organization_name="Bukhari Centre", is_video=event.get("is_video"), categories=category)
-            logging.info("Added bukhari center event to database: " + event.get("link"))
     # close the database connection
     db.update_old_activity()
     db.close_connection()

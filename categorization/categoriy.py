@@ -4,12 +4,16 @@ import time
 from datetime import datetime, timedelta
 import re
 import json
+from dotenv import load_dotenv
 
+
+load_dotenv()
 
 api_key = os.getenv('GENAI_API_KEY')
-genai.configure(api_key="AIzaSyAQVBz9vGrGtqzjCpFxnn2y0maUIbO3tg8")
+print("api key: ", api_key)
+genai.configure(api_key=api_key)
+model = genai.GenerativeModel('gemini-2.0-flash')
 
-model = genai.GenerativeModel('gemini-pro')
 
 class Categorize:
     def __init__(self, token_counter_min, rpd, rpm):
@@ -235,19 +239,3 @@ def refine_response( response):
             break
 
     return refined_response
-response1 = "category1: Halaqas\ncategory2: Religious Education\ncategory3: Islamic Studies Classe"
-response2 = "Community Gatherings: yes, Advocacy and Awareness: yes"
-response3 = "category1: Sports and Recreation, category2: Community Gatherings, category3: Brothers"
-response4 = "Community Gatherings: xx"
-
-print(refine_response(response1))
-# Output: {'category1': 'Halaqas', 'category2': 'Religious Education', 'category3': 'Islamic Studies Classe'}
-
-print(refine_response(response2))
-# Output: {'category1': 'Community Gatherings', 'category2': 'Advocacy and Awareness'}
-
-print(refine_response(response3))
-# Output: {'category1': 'Sports and Recreation', 'category2': 'Community Gatherings', 'category3': 'Brothers'}
-
-print(refine_response(response4))
-# Output: {'category1': 'Community Gatherings'}

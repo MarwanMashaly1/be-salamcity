@@ -12,6 +12,8 @@ class KmaSpider:
         self.events_soup = BeautifulSoup(self.events_page, 'html.parser')
         self.prayer_soup = BeautifulSoup(self.prayer_page, 'html.parser')
 
+        print("KMA Spider initialized")
+
     def get_events(self):
         events = []
         # Find events under the specified article tag
@@ -165,3 +167,11 @@ class KmaSpider:
         # prayer_times.append(("Shuruq", shuruq_time, '-'))
         
         return prayer_times
+    
+
+if __name__ == "__main__":
+    spider = KmaSpider()
+    events = spider.get_events()
+    prayer_times = spider.get_prayerTimes()
+    print("events: ", events)
+    print("prayer times: ", prayer_times)

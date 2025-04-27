@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, send_from_directory, render_template
+from flask import Flask, jsonify, send_from_directory, render_template, request
 from flask_cors import CORS
 from flask_caching import Cache
 from db.config import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME
 from db.models import Database
 from datetime import datetime
+from utils.webhook import process_message_event
 import logging
 
 
@@ -101,6 +102,36 @@ def get_organization_image(organization_id):
     # get all organizations from the database
     image = db.get_organization_image(organization_id)
     return jsonify(image)
+
+@app.route('/api/v1/webhook', methods=['POST', 'PUT', 'PATCH', 'DELETE'])
+def webhook_handler():
+    # Only allow accepted methods (POST, PUT, PATCH, DELETE)
+    if request.method not in ['POST', 'PUT', 'PATCH', 'DELETE']:
+        logging.warning(f"Received unsupported HTTP method: {request.method}")
+        return jsonify({'error': 'Method not allowed'}), 405
+
+    # Try to get the JSON body from the request
+    data = request.get_json(silent=True)
+    if not data:
+        logging.error("Invalid or missing JSON in the request")
+        return jsonify({'error': 'Invalid JSON data'}), 400
+
+    # Log the incoming request data for debugging/traceability.
+    logging.info(f"Received {request.method} request: {data}")
+
+    # Process webhook events based on their type
+    # (Messages, Statuses, Chats, etc.)
+    if 'messages' in data:
+        for message in data['messages']:
+            # Filter out outgoing messages if needed
+            if not message.get('from_me', True):
+                process_message_event(db, message)
+    # You can add additional conditions for other events such as chats, contacts, etc.
+    else:
+        logging.warning("Webhook event data does not contain known keys (messages/statuses/etc.)")
+
+    # Always acknowledge the webhook with a success code
+    return jsonify({'status': 'success'}), 200
 
 # Flask error handling
 @app.errorhandler(500)
