@@ -50,18 +50,18 @@ def process_message_event(db, message):
             return  # Or handle unknown communities as needed
 
         # Initialize event properties
-        full_description = None
+        full_description = ''
         image = None
         link = None
         is_video = False
         title = None
+        print("message: ", message)
 
         if msg_type == 'text':
             # For text messages, assume the text is in a nested 'text' field.
-            text_body = message.get('text', {}).get('body', '')
-            full_description = text_body
-            title = text_body.split('\n', 1)[0]  # Use the first line as title if appropriate.
-        elif msg_type == 'document':
+            full_description = message.get('text', {}).get('body', '')
+            title = full_description.split('\n', 1)[0]  # Use the first line as title if appropriate.
+        elif msg_type == 'image':
             # For document messages, extract details from the 'document' field.
             document_info = message.get('document', {})
             full_description = document_info.get('caption', '')
@@ -75,7 +75,7 @@ def process_message_event(db, message):
         # Categorize events using your categorization function.
         categories = categorize_events(title, full_description)
 
-        parsed = parse_event_from_message(message)
+        parsed = parse_event_from_message(full_description)
         if parsed['is_event']:
 
             # Insert the event into the database using a rate-limited call if necessary.
@@ -100,7 +100,8 @@ def process_message_event(db, message):
 
     except Exception as e:
         logging.error(f"Error processing message: {e}")
-
+        print(f"Error processing message: {e}")
+        
 def parse_event_from_message(msg: str):
     result = {
         "is_event": False,
@@ -158,5 +159,8 @@ def parse_event_from_message(msg: str):
 
     # Declare it an event if it hits threshold
     result["is_event"] = score >= 2
+
+    print(f"Parsed event: {result}")
+    logging.info(f"Parsed event: {result}")
 
     return result
