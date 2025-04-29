@@ -62,12 +62,12 @@ def process_message_event(db, message):
             full_description = message.get('text', {}).get('body', '')
             title = full_description.split('\n', 1)[0]  # Use the first line as title if appropriate.
         elif msg_type == 'image':
-            # For document messages, extract details from the 'document' field.
-            document_info = message.get('document', {})
-            full_description = document_info.get('caption', '')
-            link = document_info.get('link', '')
-            image = document_info.get('preview')  # Optional thumbnail image.
-            title = document_info.get('file_name', '')
+            # For image messages, extract details from the 'image' field.
+            image_info = message.get('image', {})
+            full_description = image_info.get('caption', '')
+            link = image_info.get('link', '')
+            image = image_info.get('preview')  # Optional thumbnail image.
+            title = image_info.get('file_name', '')
         else:
             logging.info(f"Unhandled message type: {msg_type}")
             return
